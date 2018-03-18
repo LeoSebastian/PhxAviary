@@ -3,34 +3,34 @@ from ethtoken.abi import EIP20_ABI
 def get_abi():
 
     EIP20_ABI.append({
-		'constant': True,
-		'inputs': [{'name': '','type': 'address'}],
-		'name': 'tokenBalance',
-		'outputs': [{'name': '','type': 'uint256'}],
-		'payable': False,
-		'stateMutability': 'view',
-		'type': 'function'
-	})
+        'constant': True,
+        'inputs': [{'name': '','type': 'address'}],
+        'name': 'tokenBalance',
+        'outputs': [{'name': '','type': 'uint256'}],
+        'payable': False,
+        'stateMutability': 'view',
+        'type': 'function'
+    })
 
     EIP20_ABI.append({
-		'constant': True,
-		'inputs': [{'name': '_owner','type': 'address'}],
+        'constant': True,
+        'inputs': [{'name': '_owner','type': 'address'}],
         'name': 'dividends',
         'outputs': [{'name': 'amount','type': 'uint256'}],
-		'payable': False,
-		'stateMutability': 'view',
-		'type': 'function'
-	})
+        'payable': False,
+        'stateMutability': 'view',
+        'type': 'function'
+    })
 
     EIP20_ABI.append({
-		'constant': False,
-		'inputs': [],
-		'name': 'reinvestDividends',
-		'outputs': [],
-		'payable': False,
-		'stateMutability': 'nonpayable',
-		'type': 'function'
-	})
+        'constant': False,
+        'inputs': [],
+        'name': 'reinvestDividends',
+        'outputs': [],
+        'payable': False,
+        'stateMutability': 'nonpayable',
+        'type': 'function'
+    })
 
     EIP20_ABI.append({
         'constant': True,
