@@ -48,10 +48,11 @@ class PhxAviary(object):
                 if (onlyMine):
                     print ('\t\tDetermining if withdrawals or reinvestments are necessary...')
                     if (account.div_bal >= self.min_withdraw):
-                        print ('\t\tMinimum withdrawal threshold reached (%s): withdrawing dividends...' % str(account.div_bal))
+                        print ('\t\tCurrent dividend balance for this account: %s' % str(account.div_bal))
+                        print ('\t\tMinimum withdrawal threshold reached (%s): withdrawing dividends...' % str(self.min_withdraw))
                         account.withdraw_divs()
                         account.update_div_bal()
-
+                        
                     # Assume that reinvestment will take place, and decide otherwise
                     # if you do not have sufficient gas in your account. If so, it will
                     # withdraw your dividends thus far.

@@ -24,7 +24,7 @@ class PhxWallet(object):
             sys.exit('ERROR: This wallet has no EPX: %s' % pub_key)
             
         self.eth_bal  = self.web3_obj.eth.getBalance(pub_key)
-        self.div_bal = self.web3_obj.toWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
+        self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
         self.mining_dt = None
         self.set_mining_dt()
 
@@ -32,7 +32,7 @@ class PhxWallet(object):
         self.eth_bal = self.web3_obj.eth.getBalance(pub_key)
         
     def update_div_bal(self):
-        self.div_bal = self.ethphoenix.functions.dividends(self.pub_key).call()
+        self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
 
     def set_mining_dt(self):
         cooldown = self.phoenixcoin.functions.miningCooldown().call({'from': self.pub_key})
