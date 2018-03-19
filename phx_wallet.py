@@ -20,17 +20,17 @@ class PhxWallet(object):
         self.phoenixcoin  = self.web3_obj.eth.contract(address='0x14b759A158879B133710f4059d32565b4a66140C', abi=custom_abi)
 
         ### check that the wallet has EPX
-        epx_bal = self.ethphoenix.functions.tokenBalance(pub_key).call()
+        epx_bal = self.ethphoenix.functions.tokenBalance(self.pub_key).call()
         if (epx_bal == 0):
-            sys.exit('ERROR: This wallet has no EPX: %s' % pub_key)
+            sys.exit('ERROR: This wallet has no EPX: %s' % self.pub_key)
 
-        self.eth_bal  = self.web3_obj.eth.getBalance(pub_key)
+        self.eth_bal  = self.web3_obj.eth.getBalance(self.pub_key)
         self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
         self.mining_dt = None
         self.set_mining_dt()
 
     def update_eth_bal(self):
-        self.eth_bal = self.web3_obj.eth.getBalance(pub_key)
+        self.eth_bal = self.web3_obj.eth.getBalance(self.pub_key)
 
     def update_div_bal(self):
         self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')

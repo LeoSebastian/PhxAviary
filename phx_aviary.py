@@ -11,7 +11,6 @@ class PhxAviary(object):
         config.read('aviary.cfg')
         self.minutes = int(config['global']['frequency'])
         self.frequency = self.minutes * 60 # converts config minutes to seconds
-        self.mine_only = config['global']['mine_only']
         self.min_withdraw = float(config['global']['minimum_withdraw'])
         self.min_reinvest = float(config['global']['minimum_reinvest'])
         self.min_bal = float(config['global']['minimum_balance'])
