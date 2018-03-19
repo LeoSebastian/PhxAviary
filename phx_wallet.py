@@ -51,7 +51,7 @@ class PhxWallet(object):
             print('\t\tMinimum reinvestment parameter reached. Reinvesting...')
             self.raw_txn('0x2Fa0ac498D01632f959D3C18E38f4390B005e200','0x957b2e56')
         else:
-            print('\t\tInsufficient dividends (%f) to either withdraw or reinvest.' % self.div_bal)
+            print('\t\tInsufficient dividends to either withdraw or reinvest.')
 
     def raw_txn(self, addr, txn_data):
         nonce = self.web3_obj.eth.getTransactionCount(self.pub_key)
@@ -71,4 +71,4 @@ class PhxWallet(object):
 
         signed = w3.eth.account.signTransaction(base_trans, self.priv_key)
         ret = self.web3_obj.eth.sendRawTransaction(signed.rawTransaction)
-        print('\t\t https://etherscan.io/tx/%s' % w3.toHex(ret))
+        print('\t\t  https://etherscan.io/tx/%s' % w3.toHex(ret))

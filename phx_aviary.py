@@ -41,11 +41,11 @@ class PhxAviary(object):
             for key,account in self.wallets.items():
                 print ('\n\tInitiating Aviary loop for %s' % account.pub_key)
                 print ('\n\t\tCurrent time is %s' % str(dt.datetime.now()))
-                print ('\n\t\tUpdating ETH balance of wallet')
+                print ('\t\tUpdating ETH balance of wallet...')
                 account.update_eth_bal()
-                print ('\n\t\tChecking if you are eligible to mine PHX: %s' % str(account.mining_dt))
+                print ('\n\t\tChecking if you are eligible to mine PHX: %s' % str(account.mining_dt)[:-7])
                 if dt.datetime.now() >= account.mining_dt:
-                    print('Mining now possible. Initiating mine...\n')
+                    print('\t\tMining now possible. Initiating mine...\n')
                     account.mine()
                 else:
                     print ('\t\tMining window not yet elapsed. Continuing on...\n')
@@ -53,8 +53,8 @@ class PhxAviary(object):
                 # the event of a heavy dump), withdraw the dividends immediately.
                 if (account.mine_only != '1'):
                     print ('\t\tDetermining if withdrawals or reinvestments are necessary...')
+                    print ('\t\tCurrent dividend balance for this account: %s Ether' % str(account.div_bal)[:-7])
                     if (account.div_bal >= self.min_withdraw):
-                        print ('\t\tCurrent dividend balance for this account: %s' % str(account.div_bal))
                         print ('\t\tMinimum withdrawal threshold reached (%s): withdrawing dividends...' % str(self.min_withdraw))
                         account.withdraw_divs()
 
