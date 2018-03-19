@@ -43,6 +43,7 @@ class PhxAviary(object):
                 print ('\n\t\tCurrent time is %s' % str(dt.datetime.now()))
                 print ('\t\tUpdating ETH balance of wallet...')
                 account.update_eth_bal()
+                account.set_mining_dt()
                 print ('\n\t\tChecking if you are eligible to mine PHX: %s' % str(account.mining_dt)[:-7])
                 if dt.datetime.now() >= account.mining_dt:
                     print('\t\tMining now possible. Initiating mine...\n')
