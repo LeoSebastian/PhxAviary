@@ -3,7 +3,7 @@ Released 19th March, 2018
 \
 Created by: Mr Fahrenheit, Norsefire\
 \
-Implemented in Python. Confirmed working on Python3.6, we cannot attest to 2.7 compatibility.\
+Implemented in Python. Confirmed working on Python 3.6. Aviary is NOT Python 2.7 compatible.\
 We recommend using Anaconda and creating a new environment.\
 \
 Required dependencies/packages (for Windows):\
