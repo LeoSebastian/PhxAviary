@@ -20,8 +20,14 @@ class PhxAviary(object):
 
         for section in config.sections():
             if not (section == 'global'):
-                self.wallets[section] = PhxWallet(config[section]['priv_key'],
-                    config[section]['pub_key'], self.provider, self.min_withdraw, self.min_reinvest)
+                self.wallets[section] = PhxWallet(args={
+                    'priv_key': config[section]['priv_key'],
+                    'pub_key': config[section]['pub_key'],
+                    'mine_only': config[section]['mine_only'],
+                    'provider': self.provider,
+                    'min_withdraw': self.min_withdraw,
+                    'min_reinvest': self.min_reinvest
+                })
 
     def main(self):
         print('\n\nWelcome to the Aviary v0.1: courtesy of Mr Fahrenheit and Norsefire!')
@@ -36,6 +42,8 @@ class PhxAviary(object):
             for key,account in self.wallets.items():
                 print ('\n\tInitiating Aviary loop for %s' % account.pub_key)
                 print ('\n\t\tCurrent time is %s' % str(dt.datetime.now()))
+                print ('\n\t\tUpdating ETH balance of wallet')
+                account.update_eth_bal()
                 print ('\n\t\tChecking if you are eligible to mine PHX: %s' % str(account.mining_dt))
                 if dt.datetime.now() >= account.mining_dt:
                     print('Mining now possible. Initiating mine...\n')
@@ -44,29 +52,25 @@ class PhxAviary(object):
                     print ('\t\tMining window not yet elapsed. Continuing on...\n')
                 # If your dividend balance has reached over a certain number (i.e. in
                 # the event of a heavy dump), withdraw the dividends immediately.
-                onlyMine = self.mine_only == "0"
-                if (onlyMine):
+                if (account.mine_only != '1'):
                     print ('\t\tDetermining if withdrawals or reinvestments are necessary...')
                     if (account.div_bal >= self.min_withdraw):
                         print ('\t\tCurrent dividend balance for this account: %s' % str(account.div_bal))
                         print ('\t\tMinimum withdrawal threshold reached (%s): withdrawing dividends...' % str(self.min_withdraw))
                         account.withdraw_divs()
-                        account.update_div_bal()
-                        
+
                     # Assume that reinvestment will take place, and decide otherwise
                     # if you do not have sufficient gas in your account. If so, it will
                     # withdraw your dividends thus far.
-                    else: 
+                    else:
                         reinvest = True
                         if (account.eth_bal < self.min_bal):
                             print ('\t\tAmount of Ether in wallet is lower than your specified minimum. Withdrawing dividends.')
                             account.withdraw_divs()
-                            account.update_eth_bal()
                             reinvest = False
-                        
+
                         if reinvest:
                             account.reinvest_divs()
-                            account.update_div_bal()
                 else:
                     print ('\t\tNon-mining functionality disabled in configuration. Skipping...')
             print ('\n\tCycle complete: entering idle state...\n')

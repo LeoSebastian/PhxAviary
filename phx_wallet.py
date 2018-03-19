@@ -9,12 +9,13 @@ from web3.auto import w3
 
 class PhxWallet(object):
 
-    def __init__(self, priv_key, pub_key, provider, min_withdraw, min_reinvest):
-        self.priv_key = priv_key
-        self.pub_key = pub_key
-        self.web3_obj = Web3(HTTPProvider(provider))
-        self.min_withdraw = self.web3_obj.toWei(min_withdraw, 'ether')
-        self.min_reinvest = self.web3_obj.toWei(min_reinvest, 'ether')
+    def __init__(self, args):
+        self.priv_key = args['priv_key']
+        self.pub_key = args['pub_key']
+        self.mine_only = args['mine_only']
+        self.web3_obj = Web3(HTTPProvider(args['provider']))
+        self.min_withdraw = self.web3_obj.toWei(args['min_withdraw'], 'ether')
+        self.min_reinvest = self.web3_obj.toWei(args['min_reinvest'], 'ether')
         self.ethphoenix   = self.web3_obj.eth.contract(address='0x2Fa0ac498D01632f959D3C18E38f4390B005e200', abi=custom_abi)
         self.phoenixcoin  = self.web3_obj.eth.contract(address='0x14b759A158879B133710f4059d32565b4a66140C', abi=custom_abi)
 
@@ -22,7 +23,7 @@ class PhxWallet(object):
         epx_bal = self.ethphoenix.functions.tokenBalance(pub_key).call()
         if (epx_bal == 0):
             sys.exit('ERROR: This wallet has no EPX: %s' % pub_key)
-            
+
         self.eth_bal  = self.web3_obj.eth.getBalance(pub_key)
         self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
         self.mining_dt = None
@@ -30,7 +31,7 @@ class PhxWallet(object):
 
     def update_eth_bal(self):
         self.eth_bal = self.web3_obj.eth.getBalance(pub_key)
-        
+
     def update_div_bal(self):
         self.div_bal = self.web3_obj.fromWei(self.ethphoenix.functions.dividends(self.pub_key).call(), 'ether')
 
@@ -43,7 +44,6 @@ class PhxWallet(object):
 
     def withdraw_divs(self):
         self.raw_txn('0x2Fa0ac498D01632f959D3C18E38f4390B005e200','0x3ccfd60b')
-        self.update_div_bal
 
     def reinvest_divs(self):
         divs_bal = self.ethphoenix.functions.dividends(self.pub_key).call()
