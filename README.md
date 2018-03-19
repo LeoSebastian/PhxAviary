@@ -23,4 +23,4 @@ priv_key = (private_key_2)\
 \
 Any feedback or suggestions, reach either of us on the EthPhoenix Discord, or via:\
 Mr Fahrenheit: coins@leosebastian.com\
-Norsefire: norsefire_phx@protonmail.com\
+Norsefire: norsefire_phx@protonmail.com
