@@ -14,6 +14,26 @@ def get_abi():
 
     EIP20_ABI.append({
         'constant': True,
+        'inputs': [],
+        'name': 'buyPrice',
+        'outputs': [{'name': '','type': 'uint256'}],
+        'payable': False,
+        'stateMutability': 'view',
+        'type': 'function'
+    })
+
+    EIP20_ABI.append({
+        'constant': True,
+        'inputs': [],
+        'name': 'sellPrice',
+        'outputs': [{'name': '','type': 'uint256'}],
+        'payable': False,
+        'stateMutability': 'view',
+        'type': 'function'
+    })
+
+    EIP20_ABI.append({
+        'constant': True,
         'inputs': [{'name': '_owner','type': 'address'}],
         'name': 'dividends',
         'outputs': [{'name': 'amount','type': 'uint256'}],

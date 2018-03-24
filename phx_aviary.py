@@ -1,6 +1,7 @@
 import configparser
 import datetime as dt
-import time
+import time,os,sys
+from copy import deepcopy
 
 from phx_wallet import PhxWallet
 
@@ -8,73 +9,41 @@ class PhxAviary(object):
 
     def __init__(self):
         config = configparser.ConfigParser()
-        config.read('aviary.cfg')
-        self.minutes = int(config['global']['frequency'])
-        self.frequency = self.minutes * 60 # converts config minutes to seconds
-        self.min_withdraw = float(config['global']['minimum_withdraw'])
-        self.min_reinvest = float(config['global']['minimum_reinvest'])
-        self.min_bal = float(config['global']['minimum_balance'])
-        self.provider = config['global']['provider']
+        config.read('LIVE_AVIARY.cfg')
+        self.frequency = int(config['global']['frequency']) * 60 # convert minutes to seconds
+        config_args = {
+            'minWithdraw': float(config['global']['minimum_withdraw']),
+            'minBuy': float(config['global']['minimum_buy']),
+            'minBalance': float(config['global']['minimum_balance']),
+            'provider': config['global']['provider']
+        }
         self.wallets = {}
+        if not(os.path.exists(os.path.join(os.getcwd(), 'logs'))):
+            os.makedirs(os.path.join(os.getcwd(), 'logs'))
 
         for section in config.sections():
             if not (section == 'global'):
-                self.wallets[section] = PhxWallet(args={
-                    'priv_key': config[section]['priv_key'],
-                    'pub_key': config[section]['pub_key'],
-                    'mine_only': config[section]['mine_only'],
-                    'provider': self.provider,
-                    'min_withdraw': self.min_withdraw,
-                    'min_reinvest': self.min_reinvest
-                })
+                wallet_conf = deepcopy(config_args)
+                wallet_conf['id'] = section
+                wallet_conf['priv_key'] = config[section]['priv_key']
+                wallet_conf['pub_key'] = config[section]['pub_key']
+                wallet_conf['mine_only'] = config[section]['mine_only']
+                self.wallets[section] = PhxWallet(wallet_conf)
 
-    def main(self):
-        print('\n\nWelcome to the Aviary v0.1: courtesy of Mr Fahrenheit and Norsefire!')
-        print('\nYour global configuration parameters are:')
-        print('  Cycle interval (in minutes): \t\t%d' % self.minutes)
-        print('  Mainnet INFURA Provider \t\t%s' % self.provider)
-        print('  Minimum withdrawal balance: \t\t%f' % self.min_withdraw)
-        print('  Minimum reinvest balance: \t\t%f' % self.min_reinvest)
-        print('  Minimum account Ether balance: \t%f' % self.min_bal)
-        print('  Alter these values in ./aviary.cfg should you choose.')
-        while True: # constant loop - gotta love them basic CS principles!
-            for key,account in self.wallets.items():
-                print ('\n\tInitiating Aviary loop for %s' % account.pub_key)
-                print ('\n\t\tCurrent time is %s' % str(dt.datetime.now()))
-                print ('\t\tUpdating ETH balance of wallet...')
-                account.update_eth_bal()
-                account.set_mining_dt()
-                print ('\n\t\tChecking if you are eligible to mine PHX: %s' % str(account.mining_dt)[:-7])
-                if dt.datetime.now() >= account.mining_dt:
-                    print('\t\tMining now possible. Initiating mine...\n')
-                    account.mine()
-                else:
-                    print ('\t\tMining window not yet elapsed. Continuing on...\n')
-                # If your dividend balance has reached over a certain number (i.e. in
-                # the event of a heavy dump), withdraw the dividends immediately.
-                if (account.mine_only != '1'):
-                    print ('\t\tDetermining if withdrawals or reinvestments are necessary...')
-                    print ('\t\tCurrent dividend balance for this account: %s Ether' % str(account.div_bal)[:-7])
-                    if (account.div_bal >= self.min_withdraw):
-                        print ('\t\tMinimum withdrawal threshold reached (%s): withdrawing dividends...' % str(self.min_withdraw))
-                        account.withdraw_divs()
+    def mainloop(self):
+        # print messages go here ...
+        # or in the wallet perhaps
+        # figure out how to clear buffer for pretty output
+        testing_counter = 0
+        while True:
+            testing_counter += 1
+            if (testing_counter == 2):
+                sys.exit()
 
-                    # Assume that reinvestment will take place, and decide otherwise
-                    # if you do not have sufficient gas in your account. If so, it will
-                    # withdraw your dividends thus far.
-                    else:
-                        reinvest = True
-                        if (account.eth_bal < self.min_bal):
-                            print ('\t\tAmount of Ether in wallet is lower than your specified minimum. Withdrawing dividends.')
-                            account.withdraw_divs()
-                            reinvest = False
-
-                        if reinvest:
-                            account.reinvest_divs()
-                else:
-                    print ('\t\tNon-mining functionality disabled in configuration. Skipping...')
-            print ('\n\tCycle complete: entering idle state...\n')
+            for id,wallet in self.wallets.items():
+                wallet.update()
+                wallet.execute_actions()
             time.sleep(self.frequency)
 
 phx_aviary = PhxAviary()
-phx_aviary.main()
+phx_aviary.mainloop()

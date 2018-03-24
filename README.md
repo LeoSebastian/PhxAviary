@@ -1,4 +1,4 @@
-PHX Aviary Alpha v0.1\
+PHX Aviary Alpha v0.2\
 Released 19th March, 2018
 \
 Created by: Mr Fahrenheit, Norsefire\
