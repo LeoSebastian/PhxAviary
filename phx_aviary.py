@@ -34,12 +34,7 @@ class PhxAviary(object):
         # print messages go here ...
         # or in the wallet perhaps
         # figure out how to clear buffer for pretty output
-        testing_counter = 0
         while True:
-            testing_counter += 1
-            if (testing_counter == 2):
-                sys.exit()
-
             for id,wallet in self.wallets.items():
                 wallet.update()
                 wallet.execute_actions()
