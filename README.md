@@ -9,8 +9,8 @@ We recommend using Anaconda and creating a new environment.\
 Required dependencies/packages (for Windows):\
 python -m pip install ethtoken web3==4.00-beta.11\
 \
-For Windows you will also need to install this: http://landinghub.visualstudio.com/visual-cpp-build-tools\
-(Only if you receive an error about Visual C++ 14.0 being required when installing the packages above)\
+For Windows you will also need to install this: http://landinghub.visualstudio.com/visual-cpp-build-tools \
+(Only if you receive an error about Visual C++ 14.0 being required when installing the packages above) \
 \
 This program has not yet been tested with OSX or Linux, so let us know if you have any issues with using it on either.\
 \
